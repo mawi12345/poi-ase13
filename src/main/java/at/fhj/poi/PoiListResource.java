@@ -7,7 +7,10 @@ import java.util.logging.Level;
 
 import javax.jdo.PersistenceManager;
 
+import org.restlet.ext.jackson.JacksonRepresentation;
+import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
 
 import javax.jdo.Query;
@@ -62,5 +65,18 @@ public class PoiListResource extends ServerResource {
 		}
 
 	}
+	
+    @Post
+    public Poi add(Poi poi) {
+    	getLogger().log(Level.INFO, "add: "+poi);
+    	//TODO: valitaion
+    	PersistenceManager pm = PMF.get().getPersistenceManager();
+    	try {
+			pm.makePersistent(poi);
+			return poi; 
+		} finally {
+			pm.close();
+		}
+    }
 
 }

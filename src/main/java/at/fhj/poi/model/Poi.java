@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.google.appengine.api.datastore.Key;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
@@ -18,7 +19,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
  * @author mawi
  *
  */
-@PersistenceCapable
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class Poi implements Serializable {
 
 	@JsonIgnore
@@ -30,10 +31,10 @@ public class Poi implements Serializable {
     private String name;
     
     @Persistent
-    private double latitude;
+    private Double latitude;
     
     @Persistent
-    private double longitude;
+    private Double longitude;
     
     @Persistent
     private String creator;
@@ -49,8 +50,10 @@ public class Poi implements Serializable {
 	}
 	
 	@JsonProperty("id")
-	public long getId() {
-		return this.getKey().getId();
+	public Long getId() {
+		if (null != this.getKey())
+			return this.getKey().getId();
+		return null;
 	}
 
 	public String getName() {
@@ -61,19 +64,19 @@ public class Poi implements Serializable {
 		this.name = name;
 	}
 
-	public double getLatitude() {
+	public Double getLatitude() {
 		return latitude;
 	}
 
-	public void setLatitude(double latitude) {
+	public void setLatitude(Double latitude) {
 		this.latitude = latitude;
 	}
 
-	public double getLongitude() {
+	public Double getLongitude() {
 		return longitude;
 	}
 
-	public void setLongitude(double longitude) {
+	public void setLongitude(Double longitude) {
 		this.longitude = longitude;
 	}
 
@@ -99,6 +102,10 @@ public class Poi implements Serializable {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+	
+	public String toString() {
+		return getName()+" id: "+getId();
 	}
     
 }
