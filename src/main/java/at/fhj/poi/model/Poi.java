@@ -1,16 +1,30 @@
 package at.fhj.poi.model;
 
+import java.io.Serializable;
+
 import com.google.appengine.api.datastore.Key;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-public class Poi {
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 
+/**
+ * POI PDO mapped entity
+ * 
+ * @author mawi
+ *
+ */
+@PersistenceCapable
+public class Poi implements Serializable {
+
+	@JsonIgnore
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Key id;
+    private Key key;
 	
     @Persistent
     private String name;
@@ -30,8 +44,13 @@ public class Poi {
     @Persistent
     private String category;
 
-	public Key getId() {
-		return id;
+	public Key getKey() {
+		return key;
+	}
+	
+	@JsonProperty("id")
+	public long getId() {
+		return this.getKey().getId();
 	}
 
 	public String getName() {

@@ -20,6 +20,7 @@ public class PoiApplication extends Application {
         router.attach("/", IndexResource.class);
         router.attach("/resources/poi", PoiListResource.class);
         router.attach("/resources/poi/{id}", PoiResource.class);
+        router.attach("/demo/create", PoiDemoDataRessource.class);
 
         return router;
     }
