@@ -1,0 +1,6 @@
+# build
+war/
+target/
+
+# Mac
+.DS_Store
