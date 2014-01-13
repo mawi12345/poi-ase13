@@ -12,6 +12,8 @@ import javax.jdo.annotations.PrimaryKey;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.restlet.data.Status;
+import org.restlet.resource.ResourceException;
 
 /**
  * POI PDO mapped entity
@@ -68,7 +70,7 @@ public class Poi implements Serializable {
 		return latitude;
 	}
 
-	public void setLatitude(Double latitude) {
+	public void setLatitude(double latitude) {
 		this.latitude = latitude;
 	}
 
@@ -76,7 +78,7 @@ public class Poi implements Serializable {
 		return longitude;
 	}
 
-	public void setLongitude(Double longitude) {
+	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
 
@@ -106,6 +108,17 @@ public class Poi implements Serializable {
 	
 	public String toString() {
 		return getName()+" id: "+getId();
+	}
+	
+	public void validate()
+	{
+    	if (getCreator() == null) throw new ResourceException(new Status(400), "POI creator is empty");
+    	if (getLatitude() == null || getLatitude() < 0.001 || getLatitude() > 90.0)
+    		throw new ResourceException(new Status(400), "POI latitude is empty or invalid");
+    	if (getLongitude() == null || getLongitude() < -180.0 || getLongitude() > 180.0)
+    		throw new ResourceException(new Status(400), "POI longitude is empty or invalid");
+    	if (getName() == null || getName().length() < 2)
+    		throw new ResourceException(new Status(400), "POI name is empty or to short");
 	}
     
 }

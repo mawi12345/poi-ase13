@@ -1,25 +1,33 @@
 package at.fhj.poi;
 
 import javax.jdo.PersistenceManager;
-
+import org.restlet.data.Status;
 import org.restlet.resource.Delete;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
+import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
-
 import at.fhj.poi.model.Poi;
 
 public class PoiResource extends ServerResource {
 	
+	public long getId() {
+    	try {
+    		return Long.valueOf(getRequest().getAttributes().get("id").toString());
+    	} catch (Exception e) {
+    		throw new ResourceException(new Status(400), "invalid POI id", e);
+    	}
+	}
+	
     @Get("json")
     public Poi represent() {
-		long id = Long.valueOf(getRequest().getAttributes().get("id").toString());    	
     	PersistenceManager pm = PMF.get().getPersistenceManager();
-    	try {
-    		Poi poi = pm.getObjectById(Poi.class, id);
+    	try {  
+    		Poi poi = pm.getObjectById(Poi.class, getId());
     		return poi;
     	} catch (Exception e) {
-    		return null;
+    		if (e instanceof ResourceException) throw e;
+    		throw new ResourceException(new Status(404), "POI not found", e);
     	} finally {
     		pm.close();
     	}
@@ -27,42 +35,36 @@ public class PoiResource extends ServerResource {
     
     @Post
     public Poi update(Poi updatedPoi) {
-		long id = Long.valueOf(getRequest().getAttributes().get("id").toString());    	
     	PersistenceManager pm = PMF.get().getPersistenceManager();
+    	updatedPoi.validate();
     	try {
-    		Poi poi = pm.getObjectById(Poi.class, id);
-	    	if (updatedPoi.getCategory() != null &&
-	    		updatedPoi.getCategory().length() > 0)
-	    		poi.setCategory(updatedPoi.getCategory());
-	    	if (updatedPoi.getCreator() != null &&
-	    		updatedPoi.getCreator().length() > 0)
-	    		poi.setCreator(updatedPoi.getCreator());
-	    	if (updatedPoi.getDescription() != null)
-	    		poi.setDescription(updatedPoi.getDescription());
-	    	if (updatedPoi.getLatitude() != null)
-	    		poi.setLatitude(updatedPoi.getLatitude());
-	    	if (updatedPoi.getLongitude() != null)
-	    		poi.setLongitude(updatedPoi.getLongitude());
-	    	if (updatedPoi.getName() != null && updatedPoi.getName().length() > 0)
-	    		poi.setName(updatedPoi.getName());
+    		Poi poi = pm.getObjectById(Poi.class, getId());
+    		poi.setCategory(updatedPoi.getCategory());
+    		poi.setCreator(updatedPoi.getCreator());
+    		poi.setDescription(updatedPoi.getDescription());
+    		poi.setLatitude(updatedPoi.getLatitude());
+    		poi.setLongitude(updatedPoi.getLongitude());
+    		poi.setName(updatedPoi.getName());
+    		poi.validate();
 	    	return poi;
     	} catch (Exception e) {
-    		return null;
+    		if (e instanceof ResourceException) throw e;
+    		throw new ResourceException(new Status(400), "POI not found", e);
     	} finally {
     		pm.close();
     	}
     }
     
     @Delete
-    public String remove() {
-		long id = Long.valueOf(getRequest().getAttributes().get("id").toString());    	
+    public Poi remove() {
     	PersistenceManager pm = PMF.get().getPersistenceManager();
     	try {
-    		Poi poi = pm.getObjectById(Poi.class, id);
+    		Poi poi = pm.getObjectById(Poi.class, getId());
     		pm.deletePersistent(poi);
-    		return "OK";
+    		throw new ResourceException(new Status(204));
     	} catch (Exception e) {
-    		return "ERROR "+e.getMessage();
+    		if (e instanceof ResourceException) throw e;
+    		throw new ResourceException(new Status(404), "POI not found", e);
     	} finally {
     		pm.close();
     	}

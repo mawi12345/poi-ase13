@@ -2,5 +2,8 @@
 war/
 target/
 
+# eclipse
+.README.md.html
+
 # Mac
 .DS_Store

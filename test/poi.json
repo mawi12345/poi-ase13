@@ -1,0 +1,8 @@
+{
+	"name":"Post Demo POI",
+	"latitude":51.6369641024136,
+	"longitude":41.226032489550722,
+	"creator":"curl",
+	"description":"this poi has been created by curl",
+	"category":"test"
+}
