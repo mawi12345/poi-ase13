@@ -9,11 +9,11 @@ To build, run
 
     mvn package
 
-Building will run the tests, but to explicitly run tests you can use the test target
+Building will run the tests, but to explicitly run tests you can use the test target.
 
     mvn test
 
-To start the app, use the [App Engine Maven Plugin](http://code.google.com/p/appengine-maven-plugin/) that is already included in this demo.  Just run the command.
+To start the app on an local dev server, use the [App Engine Maven Plugin](http://code.google.com/p/appengine-maven-plugin/). Just run the command.
 
     mvn appengine:devserver
 
@@ -64,7 +64,7 @@ To update an existing POI issue an `POST` request to `http://poi-ase13.appspot.c
 
 To delete an POI send an `DELETE` request to `http://poi-ase13.appspot.com/resources/poi/{ID}`.
 
-	curl -X delete http://localhost:8080/resources/poi/5750085036015616
+	curl -X delete http://poi-ase13.appspot.com/resources/poi/5750085036015616
 	
 to circumvent the javascript XMLHttpRequest limitations it is also possible to delete an POI with an `POST` request `http://poi-ase13.appspot.com/resources/poi/{ID}?methos=delete`.
 
